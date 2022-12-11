@@ -1,0 +1,204 @@
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+df=pd.read_csv("Influencer.csv")
+df.head()
+
+
+     
+ Rank	 Channel Info	 Influence Score	Followers	 Avg. Likes	 Posts	60-Day Eng Rate	New Post Avg. Likes	Total Likes	Country Or Region
+0	1	  \ncristiano	     92	             485.2m	    8.7m	     3.4k	   0.013	         6.3m	                29.1b	         Spain
+1	2	   kyliejenner	   91            	 370.7m	    8.2m	     7.0k	   0.014	         5.0m	                57.4b	       United States
+2	3	   \nleomessi	     90	             363.9m	    6.7m	      915	   0.010	         3.5m	                 6.1b	           NaN
+3	4	   \nselenagomez	 93	             348.8m	    6.1m	     1.9k	   0.005	         1.7m	                11.4b	       United States
+4	5	   \ntherock	     91	              339.4m	  1.8m	     6.8k	   0.003	        932.0k	              12.6b	       United States
+
+post=list(df['Posts'])
+post1=list()
+for num in post:
+    if 'k' in num:
+        new_num=1000*float(num.replace('k',''))
+        post1.append(new_num)
+    else:
+        post1.append(float(num))
+df['Posts']=post1
+
+followers=list(df['Followers'])
+followers1=list()
+for num in followers:
+    if 'm' in num:
+        new_num=100000*float(num.replace('m',''))
+        followers1.append(new_num)
+    else:
+        followers1.append(float(num))
+df['Followers']=followers1
+
+avg_likes=list(df['Avg. Likes'])
+avg_likes1=list()
+for num in avg_likes:
+    if 'm' in num:
+        new_num=1000000*float(num.replace('m',''))
+        avg_likes1.append(new_num)
+    else:
+        new_num=1000*float(num.replace('k',''))
+        avg_likes1.append(new_num)
+df['Avg. Likes']=avg_likes1
+
+new_post_avg_like=list(df['New Post Avg. Likes'])
+new_post_avg_like1=list()
+for num in new_post_avg_like:
+    if 'm' in num:
+        new_num=1000000*float(num.replace('m',''))
+        new_post_avg_like1.append(new_num)
+    else:
+        new_num=1000*float(num.replace('k',''))
+        new_post_avg_like1.append(new_num)
+df["New Post Avg. Likes"]=new_post_avg_like1
+
+total_likes=list(df['Total Likes'])
+total_likes1=list()
+for num in total_likes:
+    if 'b' in num:
+        new_num=1000000000*float(num.replace('b',''))
+        total_likes1.append(new_num)
+    else:
+        new_num=1000000*float(num.replace('m',''))
+        total_likes1.append(new_num)
+df['Total Likes']=total_likes1
+
+df.head()
+
+ Rank	Channel Info	Influence Score	  Followers	 Avg. Likes 	Posts	60-Day Eng Rate	 New Post Avg. Likes	Total Likes	Country Or Region
+0	1	 \ncristiano	       92       	  48520000.0	8700000.0	  3400.0	0.013           6300000.0	          2.910000e+10	Spain
+1	2	  kyliejenner	       91	          37070000.0	8200000.0	  7000.0	0.014	          5000000.0	          5.740000e+10	United States
+2	3	 \nleomessi	         90	          36390000.0	6700000.0	   915.0	0.010	          3500000.0	          6.100000e+09	NaN
+3	4	 \nselenagomez	     93	          34880000.0	6100000.0	  1900.0	0.005	          1700000.0	          1.140000e+10	United States
+4	5	 \ntherock	         91	          33940000.0	1800000.0	  6800.0	0.003	           932000.0	          1.260000e+10	United States
+
+#getting the correlation of all the columns in the dataframe
+df.corr()
+
+                       Rank	  Influence Score 	Followers 	Avg. Likes	Posts	    60-Day Eng Rate 	New Post Avg. Likes	Total Likes
+Rank	               1.000000	  -0.354843	      -0.698193	 -0.277699	 -0.058132	 0.028900	        -0.272323	          -0.465119
+Influence Score	    -0.354843	   1.000000	       0.365428	  0.048502	  0.168287	-0.072460	         0.040011	           0.234987
+Followers	          -0.698193	   0.365428	       1.000000	  0.346829	  0.069171	-0.107439	         0.260764	           0.667546
+Avg. Likes	        -0.277699	   0.048502	       0.346829	  1.000000	 -0.348795	 0.789359	         0.892784	           0.361296
+Posts	              -0.058132	   0.168287	       0.069171	 -0.348795	  1.000000	-0.334047	        -0.285154	           0.232038
+60-Day Eng Rate	     0.028900	  -0.072460	      -0.107439	  0.789359	 -0.334047	 1.000000	         0.866293	          -0.001560
+New Post Avg. Likes	-0.272323	   0.040011	       0.260764	  0.892784	 -0.285154	 0.866293	         1.000000	           0.351335
+Total Likes        	-0.465119	   0.234987	       0.667546	  0.361296	  0.232038	-0.001560	         0.351335	           1.000000
+
+Getting frequency distribution of : 1. Influence score 2. Followers 3. Posts
+
+plt.hist(df['Influence Score'])
+
+(array([  1.,   0.,   3.,   1.,   1.,   2.,   3.,  25., 107.,  57.]),
+ array([22. , 29.1, 36.2, 43.3, 50.4, 57.5, 64.6, 71.7, 78.8, 85.9, 93. ]),
+ )
+
+plt.hist(df['Followers'])
+
+(array([161.,  10.,   8.,   5.,   6.,   3.,   4.,   2.,   0.,   1.]),
+ array([ 3340000.,  7858000., 12376000., 16894000., 21412000., 25930000.,
+        30448000., 34966000., 39484000., 44002000., 48520000.]),
+ )
+
+plt.hist(df['Posts'])
+
+(array([84., 44., 22., 13., 11., 22.,  2.,  1.,  0.,  1.]),
+ array([   20.,  1708.,  3396.,  5084.,  6772.,  8460., 10148., 11836.,
+        13524., 15212., 16900.]),
+ )
+
+Which country houses the highest number of Instagram Influencers?
+Please show thecount of Instagram influencers in different countries using barchart.
+
+df['Country Or Region'].unique()
+
+array(['Spain', 'United States', nan, 'Canada', 'Brazil', 'Netherlands',
+       'United Kingdom', 'India', 'Uruguay', 'Turkey', 'Indonesia',
+       'Colombia', 'France', 'Australia', 'Italy', 'United Arab Emirates',
+       'Puerto Rico', "CÃ´te d'Ivoire", 'Anguilla', 'Switzerland',
+       'Sweden', 'British Virgin Islands', 'Czech Republic', 'Mexico',
+       'Germany', 'Russia'], dtype=object)
+
+c=df['Country Or Region'].value_counts()
+print(c)
+c.plot.bar()
+
+United States             65
+Brazil                    13
+India                     12
+Indonesia                  7
+France                     6
+Spain                      5
+United Kingdom             4
+Colombia                   3
+Canada                     3
+Mexico                     2
+Turkey                     2
+Netherlands                2
+Switzerland                1
+Germany                    1
+Czech Republic             1
+British Virgin Islands     1
+Sweden                     1
+Australia                  1
+Anguilla                   1
+CÃ´te d'Ivoire             1
+Puerto Rico                1
+United Arab Emirates       1
+Italy                      1
+Uruguay                    1
+Russia                     1
+Name: Country Or Region, dtype: int64
+
+Who are the top 10 influencers in the given dataset based on the following features
+● Followers ● Average likes ● Total Likes
+
+
+plt.bar(list(df['Channel Info']),list(df['Followers']))
+plt.xticks(rotation=90)
+df['Followers_sorted']=df['Followers'].sort_values(ascending=False)
+i=0
+
+for each in df['Followers_sorted']:
+    if each == df['Followers'][i]:
+        print(df['Channel Info'])[i]
+    i=i+1
+
+0                \ncristiano
+1                kyliejenner
+2                 \nleomessi
+3              \nselenagomez
+4                  \ntherock
+               ...          
+195    \nkhabib_nurmagomedov
+196           \ndanbilzerian
+197              \nraisa6690
+198            \nluansantana
+199             \nnancyajram
+Name: Channel Info, Length: 200, dtype: object
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+Input In [21], in ()
+      6 for each in df['Followers_sorted']:
+      7     if each == df['Followers'][i]:
+----> 8         print(df['Channel Info'])[i]
+      9     i=i+1
+
+TypeError: 'NoneType' object is not subscriptable
+
+Describe the relationship between the following pairs of features using a suitable graph
+● Followers and Total Likes ● Followers and Influence Score ● Posts and Average likes ● Posts and Influence Score
+
+plt.scatter(df['Followers'],df['Total Likes'])
+
+plt.scatter(df['Followers'],df['Influence Score'])
+
+plt.scatter(df['Posts'],df['Avg. Likes'])
+
+plt.scatter(df["Posts"],df["Influence Score"])
+     
